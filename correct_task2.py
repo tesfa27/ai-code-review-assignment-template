@@ -8,7 +8,7 @@ def count_valid_emails(emails):
     email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     
     for email in emails:
-        if isinstance(email, str) and re.match(email_pattern, email.strip()):
+        if isinstance(email, str) and re.match(email_pattern, email.strip().lower()):
             count += 1
     
     return count

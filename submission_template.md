@@ -10,8 +10,8 @@
 
 ## 1) Code Review Findings
 ### Critical bugs
-- **Division by zero/incorrect denominator**: Function divides total by `len(orders)` instead of count of non-cancelled orders, causing incorrect average calculation
-- **Logic inconsistency**: Excludes cancelled orders from sum but includes them in count, leading to mathematically incorrect results
+- **Incorrect denominator**: Function divides total by `len(orders)` instead of count of non-cancelled orders, causing incorrect average calculation
+- **Division by zero risk**: Will crash with ZeroDivisionError when orders list is empty
 
 ### Edge cases & risks
 - **Empty orders list**: Will cause ZeroDivisionError when `len(orders)` is 0
@@ -19,7 +19,7 @@
 - **Missing required fields**: No validation for order structure (missing 'status' or 'amount' keys will cause KeyError)
 - **Invalid data types**: No type checking for order amounts (non-numeric values will cause TypeError)
 - **Case sensitivity**: Status comparison is not case-sensitive ("Cancelled" vs "cancelled")
-- **Negative amounts**: No validation against negative values which could be refunds or corrupted data
+- **Negative amounts**: No validation against negative values
 
 ### Code quality / design issues
 - **No input validation**: Function assumes orders is a list of dictionaries with specific structure
@@ -89,7 +89,7 @@ See `correct_task1.py`
 ### Summary of changes
 - Add proper regex-based email validation
 - Add input validation and defensive programming
-- Handle whitespace trimming
+- Handle whitespace trimming and case normalization
 - Add empty input handling
 
 ### Corrected code
