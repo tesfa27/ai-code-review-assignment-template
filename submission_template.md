@@ -73,17 +73,25 @@ If you were to test this function, what areas or scenarios would you focus on, a
 
 ## 1) Code Review Findings
 ### Critical bugs
-- 
+- **Inadequate email validation**: Only checks for "@" symbol presence, accepts invalid emails like "@", "a@", "@b"
+- **No input validation**: Function will crash with TypeError if emails parameter is None or contains non-string elements
 
 ### Edge cases & risks
-- 
+- **Empty input**: No explicit handling for None or empty input
+- **Non-string elements**: Will crash when iterating over integers, None values, or other non-string types
+- **Whitespace handling**: No trimming of whitespace around email addresses
+- **Case sensitivity**: No consideration for email format standards
 
 ### Code quality / design issues
-- 
+- **Overly simplistic validation**: Basic "@" check is insufficient for real email validation
+- **No error handling**: Missing defensive programming for invalid input types
 
 ## 2) Proposed Fixes / Improvements
 ### Summary of changes
-- 
+- Add proper regex-based email validation
+- Add input validation and defensive programming
+- Handle whitespace trimming
+- Add empty input handling
 
 ### Corrected code
 See `correct_task2.py`
@@ -94,20 +102,27 @@ See `correct_task2.py`
 ### Testing Considerations
 If you were to test this function, what areas or scenarios would you focus on, and why?
 
+- **Valid emails**: Test with properly formatted email addresses
+- **Invalid formats**: Test with malformed emails (missing @, domain, etc.)
+- **Edge cases**: Test with empty strings, whitespace, special characters
+- **Input validation**: Test with None, non-list inputs, mixed data types
+
 ## 3) Explanation Review & Rewrite
 ### AI-generated explanation (original)
 > This function counts the number of valid email addresses in the input list. It safely ignores invalid entries and handles empty input correctly.
 
 ### Issues in original explanation
-- 
+- **Factually incorrect**: Claims it "safely ignores invalid entries" but will crash on non-string inputs
+- **Misleading validation**: Suggests proper email validation when only checking for "@" symbol
+- **False safety claims**: States it "handles empty input correctly" but has no explicit empty input handling
 
 ### Rewritten explanation
-- 
+- This function attempts to count valid email addresses but uses inadequate validation (only checking for "@" symbol). It will crash when encountering non-string elements and accepts many invalid email formats. The function lacks proper input validation and error handling.
 
 ## 4) Final Judgment
-- Decision: Approve / Request Changes / Reject
-- Justification:
-- Confidence & unknowns:
+- Decision: Reject
+- Justification: Inadequate email validation makes function unreliable for real-world use. Will crash on common edge cases like None values or mixed data types. The overly simplistic "@" check accepts many invalid email formats.
+- Confidence & unknowns: High confidence in validation inadequacy. Function needs complete rewrite with proper regex validation and defensive programming.
 
 ---
 
