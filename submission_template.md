@@ -1,8 +1,8 @@
 # AI Code Review Assignment (Python)
 
 ## Candidate
-- Name:
-- Approximate time spent:
+- Name: Tesfalidet Markos
+- Approximate time spent: 90 minutes
 
 ---
 
@@ -40,7 +40,6 @@ See `correct_task1.py`
 > Note: The original AI-generated code is preserved in `task1.py`.
 
 ### Testing Considerations
-If you were to test this function, what areas or scenarios would you focus on, and why?
 
 - **Empty input**: Test with empty list to ensure proper handling
 - **All cancelled orders**: Verify behavior when no valid orders exist
@@ -100,7 +99,6 @@ See `correct_task2.py`
 
 
 ### Testing Considerations
-If you were to test this function, what areas or scenarios would you focus on, and why?
 
 - **Valid emails**: Test with properly formatted email addresses
 - **Invalid formats**: Test with malformed emails (missing @, domain, etc.)
@@ -130,17 +128,27 @@ If you were to test this function, what areas or scenarios would you focus on, a
 
 ## 1) Code Review Findings
 ### Critical bugs
-- 
+- **Incorrect denominator**: Divides total by `len(values)` instead of count of valid (non-None) values, causing incorrect average calculation
+- **Division by zero**: Will crash with ZeroDivisionError when input list is empty
+- **Unhandled ValueError**: Will crash when `float(v)` encounters non-numeric values like strings
 
 ### Edge cases & risks
-- 
+- **Empty input**: No handling for empty list, causes division by zero
+- **All None values**: Results in 0/total_count = 0 instead of undefined/no valid data
+- **Mixed data types**: No validation for non-numeric values before float conversion
+- **Invalid numeric strings**: Values like "abc" will cause ValueError in float conversion
 
 ### Code quality / design issues
-- 
+- **No input validation**: Function assumes values is iterable
+- **No error handling**: Missing try-catch for float conversion failures
+- **Logic inconsistency**: Excludes None from sum but includes in count (same issue as Task 1)
 
 ## 2) Proposed Fixes / Improvements
 ### Summary of changes
-- 
+- Fix denominator to use count of valid values instead of total values
+- Add input validation for empty lists
+- Add error handling for float conversion failures
+- Use defensive programming for invalid data types
 
 ### Corrected code
 See `correct_task3.py`
@@ -148,20 +156,26 @@ See `correct_task3.py`
 > Note: The original AI-generated code is preserved in `task3.py`.
 
 ### Testing Considerations
-If you were to test this function, what areas or scenarios would you focus on, and why?
 
+- **Empty input**: Test with empty list to ensure proper handling
+- **All None values**: Verify behavior when no valid measurements exist
+- **Mixed valid/invalid data**: Test with combination of numbers, None, and non-numeric values
+- **Numeric strings**: Test with string representations of numbers ("123")
+- **Invalid conversions**: Test with non-convertible values ("abc", objects, etc.)
+- **Edge numeric values**: Test with zero, negative numbers, very large/small numbers
 
 ## 3) Explanation Review & Rewrite
 ### AI-generated explanation (original)
 > This function calculates the average of valid measurements by ignoring missing values (None) and averaging the remaining values. It safely handles mixed input types and ensures an accurate average
 
 ### Issues in original explanation
-- 
+- **Factually incorrect**: Claims "accurate average" but divides by total count instead of valid count
+- **False safety claims**: States it "safely handles mixed input types" but will crash on non-numeric values
 
 ### Rewritten explanation
-- 
+- This function attempts to calculate average of valid measurements while ignoring None values, but contains critical bugs: it divides by total count instead of valid count (producing incorrect averages) and will crash when encountering non-numeric values during float conversion. The function lacks proper input validation and error handling.
 
 ## 4) Final Judgment
-- Decision: Approve / Request Changes / Reject
-- Justification:
-- Confidence & unknowns:
+- Decision: Reject
+- Justification: Contains the same critical mathematical error as Task 1 (incorrect denominator) plus additional crash risks from unhandled float conversion. Will produce wrong results and crash on common edge cases.
+- Confidence & unknowns: High confidence in mathematical error and crash scenarios. Function needs complete rewrite of calculation logic and robust error handling.
